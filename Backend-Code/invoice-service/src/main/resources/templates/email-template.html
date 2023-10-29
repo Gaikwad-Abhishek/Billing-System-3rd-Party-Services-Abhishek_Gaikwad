@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<style>
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		table,
+		th,
+		td {
+			border: 1px solid black;
+		}
+
+		th,
+		td {
+			padding: 8px;
+			text-align: left;
+		}
+	</style>
+</head>
+
+<body>
+	<h2>Invoice</h2>
+	<p>Invoice Generation Date: <span th:text="${invoiceDate}">Response</span></p>
+	<p>Payment Due Date: <span th:text="${dueDate}">Response</span></p>
+	<p>Amount: <span th:text="${Amount}">Response</span></p>
+
+</body>
+
+</html>
