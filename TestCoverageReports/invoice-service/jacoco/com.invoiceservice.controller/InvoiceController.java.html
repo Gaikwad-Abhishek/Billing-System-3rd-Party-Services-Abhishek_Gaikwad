@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InvoiceController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">invoice-service</a> &gt; <a href="index.source.html" class="el_package">com.invoiceservice.controller</a> &gt; <span class="el_source">InvoiceController.java</span></div><h1>InvoiceController.java</h1><pre class="source lang-java linenums">package com.invoiceservice.controller;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.invoiceservice.DTO.FamilySubscriptionDTO;
+import com.invoiceservice.clients.CollectionServiceCommunication;
+import com.invoiceservice.entity.Invoice;
+import com.invoiceservice.service.EmailService;
+import com.invoiceservice.service.InvoiceService;
+
+
+
+@RestController
+@RequestMapping(&quot;api/invoice&quot;)
+<span class="fc" id="L26">public class InvoiceController {</span>
+    
+	@Autowired
+    private InvoiceService invoiceService;
+	
+	@Autowired 
+	private EmailService emailService;
+	
+	@Autowired
+	private CollectionServiceCommunication collectionServiceCommunication;
+
+    @PostMapping(&quot;/generate&quot;)
+    public ResponseEntity&lt;String&gt; generateInvoices(@RequestBody List&lt;FamilySubscriptionDTO&gt; familySubscriptionDTO) {
+<span class="nc" id="L39">    	  String response = invoiceService.createInvoices(familySubscriptionDTO);  </span>
+<span class="nc" id="L40">    	  collectionServiceCommunication.initiateCollectionCycle();</span>
+<span class="nc" id="L41">          return ResponseEntity.ok(response);</span>
+    }
+    
+    @PostMapping(&quot;/send-invoice-email&quot;)
+    public ResponseEntity&lt;String&gt; generateInvoiceEmail(@RequestBody List&lt;FamilySubscriptionDTO&gt; familySubscriptionDTO) {  
+<span class="fc" id="L46">    	  String response = emailService.generateEmailData(familySubscriptionDTO);</span>
+<span class="fc" id="L47">          return ResponseEntity.ok(response);</span>
+    }
+    
+    @GetMapping(&quot;/family-account/{accountId}&quot;)
+    public ResponseEntity&lt;List&lt;Invoice&gt;&gt; getInvoices(@PathVariable Long accountId) {
+<span class="fc" id="L52">    	return ResponseEntity.ok(invoiceService.getUserInvoice(accountId));</span>
+    }
+    
+    @PostMapping(&quot;/overdue-accounts&quot;)
+    public ResponseEntity&lt;List&lt;Long&gt;&gt; processDate(@RequestBody LocalDate generationDate) {
+<span class="fc" id="L57">        return ResponseEntity.ok(invoiceService.getOverdueAccounts(generationDate));</span>
+    }
+    
+    @PostMapping(&quot;/{invoiceId}/paid&quot;)
+    public ResponseEntity&lt;String&gt; updatePaymentStatus(@PathVariable Long invoiceId) {
+<span class="nc" id="L62">        invoiceService.markInvoiceAsPaid(invoiceId);</span>
+<span class="nc" id="L63">    	return ResponseEntity.ok(&quot;Invoice Status Updated&quot;);</span>
+    }
+    
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

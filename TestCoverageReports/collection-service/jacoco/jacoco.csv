@@ -1,0 +1,13 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+collection-service,com.collectionservice.service,PaymentService,0,20,1,1,0,5,1,2,0,2
+collection-service,com.collectionservice.service,CollectionScheduler,38,3,10,0,9,1,6,1,1,1
+collection-service,com.collectionservice.service,CollectionCycleDetailService,19,3,0,0,5,1,1,1,1,1
+collection-service,com.collectionservice.service,SuspendedAccountService,34,58,1,1,7,14,2,6,1,6
+collection-service,com.collectionservice.service,AccountStatusUpdateService,0,56,0,2,0,16,0,5,0,4
+collection-service,com.collectionservice,CollectionServiceApplication,5,3,0,0,2,1,1,1,1,1
+collection-service,com.collectionservice.exception,NoCollectionRecordFound,0,4,0,0,0,2,0,1,0,1
+collection-service,com.collectionservice.exception,SuspendedAccountNotFoundException,0,4,0,0,0,2,0,1,0,1
+collection-service,com.collectionservice.entity,SuspendedAccount,16,16,0,0,2,7,3,4,3,4
+collection-service,com.collectionservice.entity,CollectionCycleDetail,36,10,0,0,4,3,7,3,7,3
+collection-service,com.collectionservice.exceptionhandler,GlobalExceptionHandler,20,3,0,0,4,1,4,1,4,1
+collection-service,com.collectionservice.controller,CollectionController,0,42,0,0,0,10,0,5,0,5

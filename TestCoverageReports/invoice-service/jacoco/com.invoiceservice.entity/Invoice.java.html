@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Invoice.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">invoice-service</a> &gt; <a href="index.source.html" class="el_package">com.invoiceservice.entity</a> &gt; <span class="el_source">Invoice.java</span></div><h1>Invoice.java</h1><pre class="source lang-java linenums">package com.invoiceservice.entity;
+
+import java.math.BigDecimal;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.invoiceservice.enums.PaymentStatus;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+<span class="nc" id="L26">@AllArgsConstructor</span>
+@Entity
+public class Invoice {
+	
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long invoiceId;
+
+    private Long familyAccountId;
+    private BigDecimal totalAmount;
+    private LocalDate invoiceDate;
+    private LocalDate dueDate;
+    
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
+    // Other fields, getters, and setters
+
+    @OneToMany(mappedBy = &quot;invoice&quot;)
+    private List&lt;UserSubscriptionRecord&gt; userSubscriptions;
+    
+<span class="fc" id="L46">    public Invoice() {</span>
+<span class="fc" id="L47">        this.paymentStatus = PaymentStatus.UNPAID; // Set the default value to 0</span>
+<span class="fc" id="L48">    }</span>
+    
+    public Long getInvoiceId() {
+<span class="fc" id="L51">        return invoiceId;</span>
+    }
+
+    public void setInvoiceId(Long invoiceId) {
+<span class="fc" id="L55">        this.invoiceId = invoiceId;</span>
+<span class="fc" id="L56">    }</span>
+
+    public Long getFamilyAccountId() {
+<span class="fc" id="L59">        return familyAccountId;</span>
+    }
+
+    public void setFamilyAccountId(Long familyAccountId) {
+<span class="fc" id="L63">        this.familyAccountId = familyAccountId;</span>
+<span class="fc" id="L64">    }</span>
+
+    public BigDecimal getTotalAmount() {
+<span class="fc" id="L67">        return totalAmount;</span>
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+<span class="fc" id="L71">        this.totalAmount = totalAmount;</span>
+<span class="fc" id="L72">    }</span>
+
+    public LocalDate getInvoiceDate() {
+<span class="fc" id="L75">        return invoiceDate;</span>
+    }
+
+    public void setInvoiceDate(LocalDate invoiceDate) {
+<span class="fc" id="L79">        this.invoiceDate = invoiceDate;</span>
+<span class="fc" id="L80">    }</span>
+    
+    public LocalDate getDueDate() {
+<span class="fc" id="L83">        return dueDate;</span>
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+<span class="fc" id="L87">        this.dueDate = dueDate;</span>
+<span class="fc" id="L88">    }</span>
+
+    public PaymentStatus getPaymentStatus() {
+<span class="fc" id="L91">        return paymentStatus;</span>
+    }
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+<span class="nc" id="L95">        this.paymentStatus = paymentStatus;</span>
+<span class="nc" id="L96">    }</span>
+
+    public List&lt;UserSubscriptionRecord&gt; getUserSubscriptions() {
+<span class="fc" id="L99">        return userSubscriptions;</span>
+    }
+
+    public void setUserSubscriptions(List&lt;UserSubscriptionRecord&gt; userSubscriptions) {
+<span class="fc" id="L103">        this.userSubscriptions = userSubscriptions;</span>
+<span class="fc" id="L104">    }</span>
+    
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OtpService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">user-management</a> &gt; <a href="index.source.html" class="el_package">com.usermanagement.service</a> &gt; <span class="el_source">OtpService.java</span></div><h1>OtpService.java</h1><pre class="source lang-java linenums">package com.usermanagement.service;
+
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.usermanagement.entity.OTP;
+import com.usermanagement.entity.User;
+import com.usermanagement.exception.OTPNotFoundException;
+import com.usermanagement.exception.UserNotFoundException;
+import com.usermanagement.repository.OTPRepository;
+import com.usermanagement.repository.UserRepository;
+
+@Service
+<span class="fc" id="L16">public class OtpService {</span>
+	
+	@Autowired
+	OTPRepository otpRepository;
+	
+	@Autowired
+	UserRepository userRepository;
+	
+	public String generateOtp() {
+	    // Generate a random 6-digit OTP
+<span class="nc" id="L26">	    int otpLength = 6;</span>
+<span class="nc" id="L27">	    StringBuilder otp = new StringBuilder();</span>
+
+<span class="nc bnc" id="L29" title="All 2 branches missed.">	    for (int i = 0; i &lt; otpLength; i++) {</span>
+<span class="nc" id="L30">	        int digit = (int) (Math.random() * 10);</span>
+<span class="nc" id="L31">	        otp.append(digit);</span>
+	    }
+
+<span class="nc" id="L34">	    return otp.toString();</span>
+	}
+	
+    public void saveOTPForUser(Long userId, String otpValue) {
+<span class="nc" id="L38">        User user = userRepository.findById(userId)</span>
+<span class="nc" id="L39">                .orElseThrow(() -&gt; new UserNotFoundException(&quot;User with ID &quot; + userId + &quot; not found.&quot;));</span>
+
+        // Calculate the expiration time (15 minutes from the current time)
+<span class="nc" id="L42">        Date expiryDate = new Date(System.currentTimeMillis() + 15 * 60 * 1000);</span>
+
+<span class="nc" id="L44">        OTP otp = new OTP(otpValue, expiryDate, user);</span>
+<span class="nc" id="L45">        otpRepository.save(otp);</span>
+<span class="nc" id="L46">    }</span>
+    
+    public void saveOTPForUserRegistration(String contactNo, String otpValue) {
+        // Calculate the expiration time (15 minutes from the current time)
+<span class="nc" id="L50">        Date expiryDate = new Date(System.currentTimeMillis() + 15 * 60 * 1000);</span>
+
+<span class="nc" id="L52">        OTP otp = new OTP(otpValue, expiryDate, contactNo);</span>
+<span class="nc" id="L53">        otpRepository.save(otp);</span>
+<span class="nc" id="L54">    }</span>
+    
+    public boolean validateOTPForRegistration(String contactNo,String enteredOTP) {
+
+<span class="nc" id="L58">        OTP otp = otpRepository.findByContactNo(contactNo).orElseThrow(() -&gt; new OTPNotFoundException(&quot;OTP not generated. Try Again&quot;));</span>
+<span class="nc" id="L59">        otpRepository.delete(otp);        </span>
+<span class="nc" id="L60">        return enteredOTP.equals(otp.getOtpValue());</span>
+        
+    }
+    
+    public boolean validateOTP(Long userId, String enteredOTP) {
+<span class="nc" id="L65">        User user = userRepository.findById(userId)</span>
+<span class="nc" id="L66">                .orElseThrow(() -&gt; new UserNotFoundException(&quot;User with ID &quot; + userId + &quot; not found.&quot;));</span>
+
+<span class="nc" id="L68">        OTP otp = otpRepository.findByUser(user).orElseThrow(() -&gt; new OTPNotFoundException(&quot;OTP not generated. Try Again&quot;));</span>
+<span class="nc" id="L69">        otpRepository.delete(otp);        </span>
+<span class="nc" id="L70">        return enteredOTP.equals(otp.getOtpValue());</span>
+    }
+    
+    public boolean sendOtp(String otp,String contactNo) {
+    	
+    	//Currently printing on console 
+<span class="nc" id="L76">    	System.out.println(otp);</span>
+<span class="nc" id="L77">    	return true;</span>
+    	
+    }
+    
+    public String generateAndSendOtp(Long userId, String contactNo) {
+    	
+<span class="nc" id="L83">    	String otp = generateOtp();</span>
+<span class="nc" id="L84">    	saveOTPForUser(userId,otp);</span>
+<span class="nc" id="L85">    	sendOtp(otp,contactNo);</span>
+    	
+<span class="nc" id="L87">    	return otp;</span>
+    }
+    
+    public String generateAndSendOtpRegistration(String contactNo) {
+    	
+<span class="nc" id="L92">    	String otp = generateOtp();</span>
+<span class="nc" id="L93">    	saveOTPForUserRegistration(contactNo,otp);</span>
+<span class="nc" id="L94">    	sendOtp(otp,contactNo);</span>
+    	
+<span class="nc" id="L96">    	return otp;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

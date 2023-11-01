@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DeactivationRequestService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">user-management</a> &gt; <a href="index.source.html" class="el_package">com.usermanagement.service</a> &gt; <span class="el_source">DeactivationRequestService.java</span></div><h1>DeactivationRequestService.java</h1><pre class="source lang-java linenums">package com.usermanagement.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.usermanagement.entity.DeactivationRequest;
+import com.usermanagement.entity.FamilyAccount;
+import com.usermanagement.enums.FamilyAccountStatus;
+import com.usermanagement.exception.FamilyAccountNotFoundException;
+import com.usermanagement.repository.DeactivationRequestRepository;
+import com.usermanagement.repository.FamilyAccountRepository;
+
+@Service
+<span class="fc" id="L16">public class DeactivationRequestService {</span>
+	
+    @Autowired
+    private DeactivationRequestRepository deactivationRequestRepository;
+    
+    @Autowired
+    private FamilyAccountRepository familyAccountRepository;
+
+    public String createDeactivationRequest(Long familyAccountId) {
+<span class="fc" id="L25">    	FamilyAccount familyAccount = familyAccountRepository.findById(familyAccountId).orElseThrow(</span>
+<span class="nc" id="L26">				() -&gt; new FamilyAccountNotFoundException(&quot;FamilyAccount not found for user with ID &quot; + familyAccountId));</span>
+<span class="fc" id="L27">        DeactivationRequest request = new DeactivationRequest();</span>
+<span class="fc" id="L28">        request.setFamilyAccountId(familyAccountId);</span>
+<span class="fc" id="L29">        deactivationRequestRepository.save(request);</span>
+<span class="fc" id="L30">        return &quot;Deactivation Request Created&quot;;</span>
+    }
+    
+    public String deactivateAccounts() {
+        
+<span class="fc" id="L35">    	List&lt;DeactivationRequest&gt; deactivateAccounts = deactivationRequestRepository.findAll();</span>
+    	
+<span class="fc bfc" id="L37" title="All 2 branches covered.">    	for(DeactivationRequest deactivateAccount  : deactivateAccounts) {</span>
+<span class="fc" id="L38">    		FamilyAccount familyAccount = familyAccountRepository.findById(deactivateAccount.getFamilyAccountId()).orElseThrow(</span>
+<span class="nc" id="L39">    				() -&gt; new FamilyAccountNotFoundException(&quot;FamilyAccount not found for user with ID &quot; ));</span>
+<span class="fc" id="L40">    		familyAccount.setAccountStatus(FamilyAccountStatus.INACTIVE);</span>
+<span class="fc" id="L41">    		familyAccountRepository.save(familyAccount);</span>
+<span class="fc" id="L42">    	}</span>
+    	
+<span class="fc" id="L44">    	deactivationRequestRepository.deleteAll();</span>
+<span class="fc" id="L45">    	return &quot;Accounts Deactivated&quot;;</span>
+    }
+
+    public DeactivationRequest getDeactivationRequestById(Long requestId) {
+<span class="nc" id="L49">        return deactivationRequestRepository.findById(requestId).orElse(null);</span>
+    }
+
+    // You can add more service methods as needed
+
+    public void deleteDeactivationRequest(Long requestId) {
+<span class="nc" id="L55">        deactivationRequestRepository.deleteById(requestId);</span>
+<span class="nc" id="L56">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

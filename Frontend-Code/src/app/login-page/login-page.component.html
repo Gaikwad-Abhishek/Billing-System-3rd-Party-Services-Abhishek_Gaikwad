@@ -1,0 +1,103 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<app-navbar></app-navbar>
+
+<body>
+<div class="loginform">
+    <h3>Login Form</h3>
+
+<label for="username">Username: </label>
+
+<input type="text" name="username" id="username" [(ngModel)]="username">
+
+<label for="password">Password: </label>
+
+<input type="password" name="password" id="password" [(ngModel)]="password">
+
+<button type="button" (click)="login()">Login</button>
+</div>
+</body>
+</html>  -->
+
+<!-- 
+<body>
+    <mat-toolbar color="primary">
+        <div class="container menu-bar">
+            <mat-icon>ondemand_video</mat-icon>
+            <span class="title">Streamline OTT</span>
+        </div>
+    </mat-toolbar>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h3>Login</h3>
+                    </div>
+                    <div class="card-body">
+                        <div>
+                            <label for="username">Username</label>
+                            <input type="text" name="username" id="username" [(ngModel)]="username">
+                        </div>
+                        <div>
+                            <label for="password">Password</label>
+                            <input type="password" name="password" id="password" [(ngModel)]="password">
+                        </div>
+                        <button mat-raised-button color="primary" (click)="login()">Login</button>
+                        <button mat-raised-button color="primary" (click)="logout()">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body> -->
+
+<mat-toolbar class="bg-dark">
+    <div class="container menu-bar">
+      <mat-icon>ondemand_video</mat-icon>
+      <span class="title">Streamline OTT</span>
+    </div>
+    <div class="nav-options">
+      <a mat-button style="margin-right: 2rem;" routerLink="/streamline" routerLinkActive="active">Home</a>
+    </div>  
+</mat-toolbar>
+
+<section style="background-color: lightgrey;" class="py-5">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card shadow-2-strong" style="border-radius: 1rem;">
+            <div class="card-body p-5 text-center">
+  
+              <h3 class="mb-5">Sign in</h3>
+  
+              <div class="form-outline mb-4">
+                <input type="email" class="form-control form-control-lg" name="username" id="username" [(ngModel)]="username" placeholder="Email" />
+            </div>
+  
+              <div class="form-outline mb-4">
+                <input type="password" class="form-control form-control-lg" name="password" id="password" [(ngModel)]="password" placeholder="Password"/>
+            </div>
+  
+              <!-- Checkbox -->
+              <div class="form-check d-flex mb-4 text-center">
+                <p>New to Streamline ?</p>&nbsp;
+                <a color="primary" routerLink="/register">Register</a>
+              </div>
+  
+              <button class="btn btn-primary" (click)="login()">Login</button>
+              <!-- <button mat-raised-button color="primary" (click)="logout()">Logout</button> -->
+            </div>
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

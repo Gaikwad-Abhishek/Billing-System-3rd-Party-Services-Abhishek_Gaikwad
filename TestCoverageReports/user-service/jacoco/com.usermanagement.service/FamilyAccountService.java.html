@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FamilyAccountService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">user-management</a> &gt; <a href="index.source.html" class="el_package">com.usermanagement.service</a> &gt; <span class="el_source">FamilyAccountService.java</span></div><h1>FamilyAccountService.java</h1><pre class="source lang-java linenums">package com.usermanagement.service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.usermanagement.client.BillingServiceCommunication;
+import com.usermanagement.dto.FamilyAccountDetailsDTO;
+import com.usermanagement.dto.SubscriptionDTO;
+import com.usermanagement.dto.UserDTO;
+import com.usermanagement.dto.UserSubscriptionDetailsDTO;
+import com.usermanagement.entity.FamilyAccount;
+import com.usermanagement.entity.User;
+import com.usermanagement.enums.FamilyAccountStatus;
+import com.usermanagement.exception.ActiveFamilyAccountNotFoundException;
+import com.usermanagement.exception.AlreadyMemberOfAnotherFamilyAccountException;
+import com.usermanagement.exception.EmailNotFoundException;
+import com.usermanagement.exception.FamilyAccountAlreadyExistsException;
+import com.usermanagement.exception.FamilyAccountNotFoundException;
+import com.usermanagement.exception.OTPValidationFailedException;
+import com.usermanagement.exception.UserNotFoundException;
+import com.usermanagement.mapper.UserMapper;
+import com.usermanagement.repository.DeactivationRequestRepository;
+import com.usermanagement.repository.FamilyAccountRepository;
+import com.usermanagement.repository.UserRepository;
+
+@Service
+<span class="fc" id="L32">public class FamilyAccountService {</span>
+
+	
+	@Autowired
+	private FamilyAccountRepository familyAccountRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private OtpService otpService;
+	
+	@Autowired
+	private BillingServiceCommunication billingServiceCommunication;
+	
+	@Autowired
+	DeactivationRequestRepository deactivationRequestRepository;
+
+	public String createFamilyAccount(Long userId) {
+
+		// Check if the user already has a FamilyAccount
+<span class="fc" id="L53">		User user = userRepository.findById(userId)</span>
+<span class="fc" id="L54">				.orElseThrow(() -&gt; new UserNotFoundException(&quot;User with ID &quot; + userId + &quot; not found.&quot;));</span>
+
+<span class="fc bfc" id="L56" title="All 2 branches covered.">		if (familyAccountRepository.findByPrimaryUser(user).isPresent()) {</span>
+<span class="fc" id="L57">			throw new FamilyAccountAlreadyExistsException(&quot;User with ID &quot; + userId + &quot; already has a FamilyAccount.&quot;);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">		} else if (user.getFamilyAccount() != null) {</span>
+<span class="fc" id="L59">			throw new AlreadyMemberOfAnotherFamilyAccountException(</span>
+					&quot;User with ID &quot; + userId + &quot; is a secondary user in an existing FamilyAccount.&quot;);
+		}
+
+		// If both conditions pass, create a new FamilyAccount
+<span class="fc" id="L64">		FamilyAccount familyAccount = new FamilyAccount();</span>
+<span class="fc" id="L65">		familyAccount.setPrimaryUser(user);</span>
+<span class="fc" id="L66">		familyAccountRepository.save(familyAccount);</span>
+		
+<span class="fc" id="L68">		return &quot;Family Account Created Successfully&quot;; </span>
+	}
+	
+	public FamilyAccountDetailsDTO getFamilyAccountDetails(Long userId) {
+		
+<span class="nc" id="L73">		User primaryUser = userRepository.findById(userId)</span>
+<span class="nc" id="L74">				.orElseThrow(() -&gt; new UserNotFoundException(&quot;User with ID &quot; + userId + &quot; not found.&quot;));</span>
+		
+<span class="nc" id="L76">		FamilyAccount familyAccount = familyAccountRepository.findByPrimaryUser(primaryUser).orElseThrow(() -&gt; new FamilyAccountNotFoundException(</span>
+				&quot;FamilyAccount not found &quot;));
+		
+<span class="nc" id="L79">		Map&lt;Long, List&lt;SubscriptionDTO&gt;&gt; subscriptionsByUserId = getUserSubscription(familyAccount.getFamilyAccountId());</span>
+		
+<span class="nc" id="L81">	    FamilyAccountDetailsDTO familyAccountDetailsDTO = new FamilyAccountDetailsDTO();</span>
+	    
+	    // Map fields from familyAccount to familyAccountDetailsDTO
+<span class="nc" id="L84">	    familyAccountDetailsDTO.setFamilyAccountId(familyAccount.getFamilyAccountId());</span>
+<span class="nc" id="L85">	    familyAccountDetailsDTO.setAccountStatus(familyAccount.getAccountStatus());</span>
+<span class="nc" id="L86">	    System.out.println(familyAccount.getFamilyAccountId());</span>
+<span class="nc" id="L87">	    familyAccountDetailsDTO.setDeactivationRequestStatus(deactivationRequestRepository.existsByFamilyAccountId(familyAccountDetailsDTO.getFamilyAccountId()));</span>
+<span class="nc" id="L88">	    UserDTO primaryUserDTO = UserMapper.convertToDTO(primaryUser);</span>
+
+<span class="nc" id="L90">	    familyAccountDetailsDTO.setPrimaryUser(primaryUserDTO);</span>
+<span class="nc" id="L91">	    UserSubscriptionDetailsDTO priUserSubscriptionDetailsDTO = new UserSubscriptionDetailsDTO();</span>
+
+<span class="nc" id="L93">        priUserSubscriptionDetailsDTO.setUserId(primaryUser.getUserId());</span>
+<span class="nc" id="L94">        priUserSubscriptionDetailsDTO.setUsername(primaryUser.getUsername());</span>
+        
+     // Fetch subscriptions from the existing map using the user's ID
+<span class="nc" id="L97">        List&lt;SubscriptionDTO&gt; priSubscriptions = subscriptionsByUserId.get(priUserSubscriptionDetailsDTO.getUserId());</span>
+<span class="nc" id="L98">        priUserSubscriptionDetailsDTO.setSubscriptions(priSubscriptions);</span>
+        
+	    // Map secondary users
+<span class="nc" id="L101">	    List&lt;UserSubscriptionDetailsDTO&gt; secondaryUserDTOs = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">	    for (User secondaryUser : familyAccount.getSecondaryUsers()) {</span>
+<span class="nc" id="L103">	        UserSubscriptionDetailsDTO userSubscriptionDetailsDTO = new UserSubscriptionDetailsDTO();</span>
+<span class="nc" id="L104">	        userSubscriptionDetailsDTO.setUserId(secondaryUser.getUserId());</span>
+<span class="nc" id="L105">	        userSubscriptionDetailsDTO.setUsername(secondaryUser.getUsername());</span>
+<span class="nc" id="L106">	        userSubscriptionDetailsDTO.setFirstName(secondaryUser.getFirstName());</span>
+<span class="nc" id="L107">	        userSubscriptionDetailsDTO.setLastName(secondaryUser.getLastName());</span>
+	        
+	        
+	        // Fetch subscriptions from the existing map using the user's ID
+<span class="nc" id="L111">	        List&lt;SubscriptionDTO&gt; subscriptions = subscriptionsByUserId.get(userSubscriptionDetailsDTO.getUserId());</span>
+	        
+<span class="nc bnc" id="L113" title="All 2 branches missed.">	        if (subscriptions != null) {</span>
+<span class="nc" id="L114">	            userSubscriptionDetailsDTO.setSubscriptions(subscriptions);</span>
+	        } else {
+	            // Handle the case where no subscriptions are found for the user
+<span class="nc" id="L117">	            userSubscriptionDetailsDTO.setSubscriptions(new ArrayList&lt;&gt;());</span>
+	        }
+	        
+<span class="nc" id="L120">	        secondaryUserDTOs.add(userSubscriptionDetailsDTO);</span>
+<span class="nc" id="L121">	    }</span>
+<span class="nc" id="L122">	    secondaryUserDTOs.add(priUserSubscriptionDetailsDTO);</span>
+<span class="nc" id="L123">	    familyAccountDetailsDTO.setSecondaryUsers(secondaryUserDTOs);</span>
+
+<span class="nc" id="L125">	    return familyAccountDetailsDTO;</span>
+	}
+	
+	public Map&lt;Long, List&lt;SubscriptionDTO&gt;&gt; getUserSubscription(Long familyAccountId){
+		
+<span class="nc" id="L130">		List&lt;SubscriptionDTO&gt; receivedSubscriptions = billingServiceCommunication.getAccountSubscriptions(familyAccountId);</span>
+		
+<span class="nc" id="L132">		Map&lt;Long, List&lt;SubscriptionDTO&gt;&gt; subscriptionsByUserId = new HashMap&lt;&gt;();</span>
+
+	    // Group received subscriptions by user ID
+<span class="nc bnc" id="L135" title="All 2 branches missed.">	    for (SubscriptionDTO subscription : receivedSubscriptions) {</span>
+<span class="nc" id="L136">	        Long userId = subscription.getUserId();</span>
+<span class="nc" id="L137">	        subscriptionsByUserId</span>
+<span class="nc" id="L138">	            .computeIfAbsent(userId, k -&gt; new ArrayList&lt;&gt;())</span>
+<span class="nc" id="L139">	            .add(subscription);</span>
+<span class="nc" id="L140">	    }</span>
+	    
+<span class="nc" id="L142">	    return subscriptionsByUserId;</span>
+	}
+	
+	public String addFamilyMember(Long userId,String otp, String contactNo) {
+
+		// Check if the family account exists
+<span class="nc" id="L148">		User user = userRepository.findById(userId)</span>
+<span class="nc" id="L149">				.orElseThrow(() -&gt; new UserNotFoundException(&quot;User with ID &quot; + userId + &quot; not found.&quot;));</span>
+
+<span class="nc" id="L151">		FamilyAccount familyAccount = familyAccountRepository.findByPrimaryUser(user)</span>
+<span class="nc" id="L152">				.orElseThrow(() -&gt; new FamilyAccountNotFoundException(</span>
+<span class="nc" id="L153">						&quot;FamilyAccount not found for user with ID &quot; + user.getUserId()));</span>
+		
+<span class="nc" id="L155">		User familyMember = userRepository.findByContactNo(contactNo)</span>
+<span class="nc" id="L156">				.orElseThrow(() -&gt; new UserNotFoundException(&quot;No user with contact &quot; + contactNo));</span>
+		
+<span class="nc bnc" id="L158" title="All 2 branches missed.">		if (otpService.validateOTP(userId,otp) == false) {</span>
+<span class="nc" id="L159">			throw new OTPValidationFailedException(&quot;Invalid OTP. Please enter the correct OTP.&quot;);</span>
+		}
+<span class="nc bnc" id="L161" title="All 2 branches missed.">		if (familyMember.getFamilyAccount() != null) {</span>
+<span class="nc" id="L162">			throw new AlreadyMemberOfAnotherFamilyAccountException(</span>
+					&quot;User with  &quot; + contactNo + &quot; is a secondary user in an existing FamilyAccount.&quot;);
+		}
+
+		// Add the family member to the account
+<span class="nc" id="L167">		familyMember.setFamilyAccount(familyAccount);</span>
+<span class="nc" id="L168">		userRepository.save(familyMember); </span>
+				
+<span class="nc" id="L170">		return &quot;User Added to Family Account&quot;;</span>
+	}
+	
+	public String removeFamilyMember(Long userId) {
+
+		// Check if the family account exists
+<span class="nc" id="L176">		User familyMember = userRepository.findById(userId)</span>
+<span class="nc" id="L177">				.orElseThrow(() -&gt; new UserNotFoundException(&quot;User with ID &quot; + userId + &quot; not found.&quot;));</span>
+		
+<span class="nc bnc" id="L179" title="All 2 branches missed.">		if (familyMember.getFamilyAccount() != null) {</span>
+<span class="nc" id="L180">			familyMember.setFamilyAccount(null);</span>
+		}
+
+<span class="nc" id="L183">		userRepository.save(familyMember); </span>
+<span class="nc" id="L184">		billingServiceCommunication.removeUserSubscriptions(userId);</span>
+<span class="nc" id="L185">		return &quot;Member Removed Family Account&quot;;</span>
+	}
+
+	public FamilyAccount getFamilyAccountById(Long accountId) {
+<span class="nc" id="L189">		return familyAccountRepository.findById(accountId).orElseThrow(</span>
+<span class="nc" id="L190">				() -&gt; new FamilyAccountNotFoundException(&quot;FamilyAccount not found for user with ID &quot; + accountId));</span>
+	}
+
+	public FamilyAccount activateFamilyAccount(Long accountId) {
+
+<span class="fc" id="L195">		FamilyAccount familyAccount = familyAccountRepository.findById(accountId).orElseThrow(</span>
+<span class="nc" id="L196">				() -&gt; new FamilyAccountNotFoundException(&quot;FamilyAccount not found for user with ID &quot; + accountId));</span>
+
+<span class="fc" id="L198">		familyAccount.setAccountStatus(FamilyAccountStatus.ACTIVE);</span>
+<span class="fc" id="L199">		familyAccount = familyAccountRepository.save(familyAccount);</span>
+
+<span class="fc" id="L201">		return familyAccount;</span>
+	}
+
+	public String suspendFamilyAccount(List&lt;Long&gt; accountIds) {
+
+<span class="fc bfc" id="L206" title="All 2 branches covered.">		for (Long accountId : accountIds) {</span>
+<span class="fc" id="L207">			FamilyAccount familyAccount = familyAccountRepository.findById(accountId).orElseThrow(</span>
+<span class="nc" id="L208">					() -&gt; new FamilyAccountNotFoundException(&quot;FamilyAccount not found for user with ID &quot; + accountId));</span>
+
+<span class="fc" id="L210">			familyAccount.setAccountStatus(FamilyAccountStatus.SUSPENDED);</span>
+<span class="fc" id="L211">			familyAccountRepository.save(familyAccount);</span>
+<span class="fc" id="L212">		}</span>
+
+<span class="fc" id="L214">		return &quot;Accounts Suspended&quot;;</span>
+	}
+
+	public String terminateFamilyAccount(List&lt;Long&gt; accountIds) {
+
+<span class="fc bfc" id="L219" title="All 2 branches covered.">		for (Long accountId : accountIds) {</span>
+<span class="fc" id="L220">			FamilyAccount familyAccount = familyAccountRepository.findById(accountId).orElseThrow(</span>
+<span class="nc" id="L221">					() -&gt; new FamilyAccountNotFoundException(&quot;FamilyAccount not found for user with ID &quot; + accountId));</span>
+
+<span class="fc" id="L223">				familyAccount.setAccountStatus(FamilyAccountStatus.TERMINATED);</span>
+<span class="fc" id="L224">				familyAccountRepository.save(familyAccount);</span>
+<span class="fc" id="L225">			}</span>
+		
+<span class="fc" id="L227">	return &quot;Accounts Terminated&quot;;</span>
+
+	}
+
+	public List&lt;Long&gt; getActiveFamilyAccountIds() {
+
+<span class="fc" id="L233">		List&lt;FamilyAccount&gt; activeFamilyAccounts = familyAccountRepository</span>
+<span class="fc" id="L234">				.findByAccountStatus(FamilyAccountStatus.ACTIVE).orElseThrow(</span>
+<span class="nc" id="L235">						() -&gt;  new ActiveFamilyAccountNotFoundException(&quot;No active FamilyAccounts found.&quot;));</span>
+		
+<span class="fc" id="L237">		List&lt;Long&gt; activeFamilyAccountIds = activeFamilyAccounts.stream()</span>
+<span class="fc" id="L238">				.map(FamilyAccount::getFamilyAccountId)</span>
+<span class="fc" id="L239">				.toList();</span>
+
+<span class="fc" id="L241">		return activeFamilyAccountIds;</span>
+	}
+
+	public String getPrimaryUserMail(Long familyAccountId) {
+
+<span class="fc" id="L246">		FamilyAccount familyAccount = familyAccountRepository.findById(familyAccountId).orElseThrow(</span>
+<span class="nc" id="L247">				() -&gt; new FamilyAccountNotFoundException(&quot;FamilyAccount not found for user with ID &quot; + familyAccountId));</span>
+
+<span class="fc" id="L249">			User primaryUser = familyAccount.getPrimaryUser();</span>
+
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">			if (primaryUser != null) {</span>
+<span class="pc bpc" id="L252" title="1 of 2 branches missed.">				if(primaryUser.getEmail() == null) {</span>
+<span class="nc" id="L253">					throw new EmailNotFoundException(&quot;Email not found for the primary user.&quot;);</span>
+				}
+			}
+				
+<span class="fc" id="L257">		return primaryUser.getEmail();</span>
+		
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

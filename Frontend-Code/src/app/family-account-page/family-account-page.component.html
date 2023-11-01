@@ -1,0 +1,264 @@
+<app-navbar></app-navbar>
+<!-- <div *ngIf="!familyAccountData">
+  <button type="btn bg-dark text-white " (click)="createFamilyAccount()">Create</button>
+</div>
+<div *ngIf="familyAccountData">
+  <h1>Family Account ID: {{ familyAccountData.familyAccountId }}</h1>
+  <h4>Account Status: {{ familyAccountData.accountStatus }}</h4>
+
+  <h2>Primary User:</h2>
+  <p>User ID: {{ familyAccountData.primaryUser.userId }}</p>
+  <p>Username: {{ familyAccountData.primaryUser.username }}</p>
+  <p>Email: {{ familyAccountData.primaryUser.email }}</p>
+  <p>First Name: {{ familyAccountData.primaryUser.firstName }}</p>
+  <p>Last Name: {{ familyAccountData.primaryUser.lastName }}</p>
+  <p>Contact No: {{ familyAccountData.primaryUser.contactNo }}</p>
+
+  <h2>Member Details: </h2>
+  <div *ngFor="let user of familyAccountData.secondaryUsers">
+    <p>User ID: {{ user.userId }}</p>
+    <p>Username: {{ user.username }}</p>
+    <h3>Subscriptions:</h3>
+    <ul>
+      <li *ngFor="let subscription of user.subscriptions">
+        <p>Subscription ID: {{ subscription.id }}</p>
+        <p>Provider Name: {{ subscription.pack.providerName }}</p>
+        <p>Price: {{ subscription.pack.price | currency:'INR':true }}</p>
+        <p>Description: {{ subscription.pack.description }}</p>
+        <button *ngIf="familyAccountData.accountStatus === 'INACTIVE'" (click)="removeSubscription(subscription.id)">Remove</button>
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="familyAccountData.accountStatus === 'INACTIVE'">
+    <button type="btn bg-dark text-white " (click)="addMember()">Add Member</button>
+    <button type="btn bg-dark text-white " (click)="getAvailablePack()">Add Subscription</button>
+    <button type="btn bg-dark text-white " (click)="activateAccount()">Activate Account</button>
+  </div>
+</div>
+
+<div *ngIf="addMemberInterface">
+  <input type="text" [(ngModel)]="contactNo" maxlength="10" placeholder="Enter User Number">
+  <button (click)="sendOTP()">Send OTP</button>
+  <div *ngIf="enterOTPInterface">
+    <input type="text" #otp maxlength="10" placeholder="Enter OTP">
+    <button (click)="validateMember(otp.value)">Submit</button>
+  </div>
+</div>
+
+<div *ngIf="availablePacksInterface">
+  <h2>Available Packs</h2>
+  <div *ngFor="let pack of availablePacks">
+    <div class="pack">
+      <p><strong>Provider Name:</strong> {{ pack.providerName }}</p>
+      <p><strong>Price:</strong> {{ pack.price | currency:'INR':true }}</p>
+      <p><strong>Description:</strong> {{ pack.description }}</p>
+      <button (click)="addSubscription(pack.id)">Add</button>
+    </div>
+  </div>
+</div> -->
+
+<div class="container" style="margin-top: 4rem;">
+  <div *ngIf="!familyAccountData" class="centered-content">
+    <div class="d-flex justify-content-center">
+      <button mat-raised-button class="bg-light" (click)="createFamilyAccount()">Create Family Account</button>
+    </div>
+  </div>
+
+  <mat-card *ngIf="familyAccountData" class="custom-card">
+
+    <mat-card-header class="card-header bg-light">
+      <div class="header-content">
+        <mat-card-title class="card-title">Account Status: {{ familyAccountData.accountStatus }}</mat-card-title>
+      </div>
+    </mat-card-header>
+
+    <!-- <div class="d-flex justify-content-between py-3">
+      <div *ngIf="familyAccountData.accountStatus === 'INACTIVE'" class="buttons-section  w-100">
+        <button mat-raised-button color="primary" (click)="addMember()">Add Member</button>
+        <button mat-raised-button color="primary" (click)="getAvailablePack()">Add Subscription</button>
+        <button mat-raised-button color="primary" (click)="activateAccount()">Activate Account</button>
+      </div>
+    </div> -->
+    <h5 class="p-2">Billing Cycle Ends: {{billingCycleEnds | date: 'mediumDate' }}</h5>
+    <div class="d-flex justify-content-between py-3 px-2">
+      <div *ngIf="familyAccountData.accountStatus === 'INACTIVE'" class="buttons-section w-100">
+        <div class="row">
+          <div class="col">
+            <button mat-raised-button  (click)="addMember()" class="w-100 bg-light">Add Member</button>
+          </div>
+          <div class="col">
+            <button mat-raised-button  (click)="getAvailablePack()" class="w-100 bg-light">Add
+              Subscription</button>
+          </div>
+          <div class="col">
+            <button mat-raised-button  (click)="activateAccount()" class="w-100 bg-light">Activate
+              Account</button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="familyAccountData.accountStatus === 'ACTIVE' && familyAccountData.deactivationRequestStatus == false" class="buttons-section w-100">
+        <div class="row">
+          <div class="col">
+            <button mat-raised-button color="primary" (click)="deactivateAccount()" class="w-100 bg-light">Deactivate Account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="showAccountDetails">
+      <div class="p-2">
+        <h5>Primary User:</h5>
+        <div class="p-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title"> {{ familyAccountData.primaryUser.firstName }} {{
+                  familyAccountData.primaryUser.lastName }}</h5>
+                <!-- <p class="card-text">Contact No: {{ familyAccountData.primaryUser.contactNo }}</p> -->
+                <!-- <button class="btn btn-primary" (click)="test()">Submit</button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-2">
+        <h5>Member Details:</h5>
+        <div class="px-3 py-1" *ngFor="let user of familyAccountData.secondaryUsers">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title"> {{user.username}}</h5>
+                <!-- <button class="btn btn-primary" (click)="test()">Submit</button> -->
+                <button *ngIf="familyAccountData.accountStatus === 'INACTIVE'" mat-button color="warn"
+                  (click)="removeUser(user.userId)">Remove</button>
+              </div>
+              <hr>
+              <div *ngFor="let subscription of user.subscriptions">
+                <div class="subscription-details">
+                  <p>Provider: {{ subscription.pack.providerName }}</p>
+                  <p>Price: {{ subscription.pack.price | currency:'INR':true }}</p>
+                  <p>Description: {{ subscription.pack.description }}</p>
+                  <button *ngIf="familyAccountData.accountStatus === 'INACTIVE'" mat-button color="warn"
+                    (click)="removeSubscription(subscription.id)">Remove</button>
+                </div>
+                <hr>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="card-body" *ngIf="addMemberInterface">
+      <div class="d-flex">
+        <h5 class="card-title"> </h5>
+        <input type="text" [(ngModel)]="contactNo" maxlength="10" placeholder="Enter User Number">
+      <button class="btn btn-primary" (click)="sendOTP()">Send OTP</button>
+      </div>
+    </div> -->
+
+    <div class="px-3 py-3" *ngIf="addMemberInterface">
+      <div class="row p-2">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col d-flex justify-content-end">
+          <button class="btn btn-danger" (click)="close()">x</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body" *ngIf="enterNumberInterface">
+          <div class="row">
+            <div class="col d-flex justify-content-center align-items-center">
+              <input type="text" [(ngModel)]="contactNo" maxlength="10" placeholder="Enter User Number">
+            </div>
+            <div class="col d-flex justify-content-center align-items-center">
+              <button class="btn btn-primary" (click)="sendOTP()">Send OTP</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body" *ngIf="enterOTPInterface">
+          <div class="row">
+            <div class="col d-flex justify-content-center align-items-center">
+              <input type="text" [(ngModel)]="otp" maxlength="6" placeholder="Enter OTP">
+            </div>
+            <div class="col d-flex justify-content-center align-items-center">
+              <button class="btn btn-primary" (click)="validateMember()">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="packAddedNoti" class="alert alert-success" role="alert">
+      This is a success alert—check it out!
+    </div>
+
+
+    <div class="px-3 py-2" *ngIf="availablePacksInterface">
+      <div class="row p-2">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col d-flex justify-content-end">
+          <button class="btn btn-danger" (click)="close()">x</button>
+        </div>
+      </div>
+      <div class="p-2" *ngFor="let pack of availablePacks">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col ">
+                <p><strong>Provider Name:</strong> {{ pack.providerName }}</p>
+                <p><strong>Description:</strong> {{ pack.description }}</p>
+              </div>
+              <div class="col d-flex justify-content-center align-items-center">
+                <p><strong>Price:</strong> {{ pack.price | currency:'INR':true }}</p>
+              </div>
+              <div class="col d-flex justify-content-center align-items-center">
+                <button class="btn btn-primary" (click)="addSubscription(pack.id)">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div *ngIf="addMemberInterface" class="centered-content"> -->
+    <!-- <input type="text" [(ngModel)]="contactNo" maxlength="10" placeholder="Enter User Number">
+      <button mat-raised-button color="primary" (click)="sendOTP()">Send OTP</button>z -->
+    <!-- <div *ngIf="enterOTPInterface" class="centered-content">
+        <input type="text" #otp maxlength="10" placeholder="Enter OTP">
+        <button mat-raised-button color="primary" (click)="validateMember(otp.value)">Submit</button>
+      </div>
+    </div> -->
+
+  </mat-card>
+
+
+
+
+
+  <!-- <div *ngIf="availablePacksInterface" class="available-packs">
+    <h2>Available Packs</h2>
+    <div *ngFor="let pack of availablePacks" class="pack">
+      <p><strong>Provider Name:</strong> {{ pack.providerName }}</p>
+      <p><strong>Price:</strong> {{ pack.price | currency:'INR':true }}</p>
+      <p><strong>Description:</strong> {{ pack.description }}</p>
+      <button mat-raised-button color="primary" (click)="addSubscription(pack.id)">Add</button>
+    </div>
+  </div> -->
+
+</div>
+
+<div class="custom-dialog" *ngIf="showNotification">
+  <div style="background-color: white;">
+    <h3 mat-dialog-title>{{notificationText}}</h3>
+    <!-- <div mat-dialog-content>
+      <p>Your notification message goes here.</p>
+    </div> -->
+    <div mat-dialog-actions class="d-flex justify-content-center">
+      <button class="btn btn-primary" (click)="test()">Close</button>
+    </div>
+  </div>
+</div>

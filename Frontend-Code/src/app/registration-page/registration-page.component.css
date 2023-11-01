@@ -1,0 +1,26 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.menu-bar{
+    display: flex;
+    align-items: center;
+    margin-left: 2rem;
+}
+
+.title{
+    margin-left: 0.5rem;
+}
+
+.bg-dark{
+    background-color: #064065 !important;
+    color:white !important;
+}
+
+.bg-light{
+    background-color: #16a2b9 !important;
+    color:white !important;
+}
+

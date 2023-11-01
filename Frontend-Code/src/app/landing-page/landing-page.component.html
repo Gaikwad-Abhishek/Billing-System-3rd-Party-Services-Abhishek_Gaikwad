@@ -1,0 +1,47 @@
+<!-- app.component.html -->
+
+<mat-toolbar class="bg-dark">
+    <div class="container menu-bar">
+      <mat-icon>ondemand_video</mat-icon>
+      <span class="title">Streamline OTT</span>
+    </div>  
+    <div class="nav-options">
+      <a mat-button routerLink="/login" routerLinkActive="active">SignIn</a>|
+      <a mat-button routerLink="/register" routerLinkActive="active">SignUp</a>
+    </div>
+</mat-toolbar>
+  
+  <div class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>Welcome to Streamline OTT Billing</h1>
+        <p>Streamline your billing process for OTT services with ease and efficiency.</p>
+        <a mat-raised-button class="bg-light" routerLink="/login">Get Started</a>
+      </div>
+      <div class="hero-image">
+        <!-- <img src="assets/ott-billing-image.jpg" alt="OTT Billing System" /> -->
+      </div>
+    </div>
+  </div>
+  
+  <div class="features">
+    <h2>Key Features</h2>
+    <div class="container"> 
+      <div class="feature-card">
+        <mat-icon>payment</mat-icon>
+        <h3>Easy Billing</h3>
+        <p class="text-center">Effortlessly manage billing for your OTT services.</p>
+      </div>
+      <div class="feature-card">
+        <mat-icon>security</mat-icon>
+        <h3>One Account</h3>
+        <p class="text-center">All family members managed under one account.</p>
+      </div>
+      <div class="feature-card">
+        <mat-icon>timeline</mat-icon>
+        <h3>On Time Alerts</h3>
+        <p class="text-center">Get Notifications of Bills on Email</p>
+      </div>
+    </div>
+  </div>
+  

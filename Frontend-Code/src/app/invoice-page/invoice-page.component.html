@@ -1,0 +1,190 @@
+<app-navbar></app-navbar>
+
+<!-- <h2>User Invoices</h2>
+<ul *ngIf="userInvoices && userInvoices.length">
+  <li *ngFor="let invoice of userInvoices">
+    <p><strong>Total Amount:</strong> {{ invoice.totalAmount | currency:'INR':true }}</p>
+    <p><strong>Invoice Date:</strong> {{ invoice.invoiceDate | date: 'MM/dd/yyyy' }}</p>
+    <button *ngIf="invoice.paymentStatus == 'UNPAID'"
+      (click)="makePayment(invoice.familyAccountId,invoice.invoiceId)">Pay</button>
+  </li>
+</ul> -->
+
+<div class="container" style="margin-top: 4rem;">
+
+  <mat-card class="custom-card">
+
+    <mat-card-header class="card-header bg-light">
+      <div class="header-content">
+        <mat-card-title class="card-title ">Invoices</mat-card-title>
+      </div>
+    </mat-card-header>
+    <p class="d-flex justify-content-center align-items-center mt-2 mb-2"
+      *ngIf="!userInvoices || userInvoices.length === 0">No user invoices available.</p>
+    <div *ngIf="userInvoices && userInvoices.length && showInvoices">
+
+      <div class="p-2">
+        <div class="px-3 py-1" *ngFor="let invoice of userInvoices">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col d-flex justify-content-center align-items-center text-center">
+                  <p><strong>Invoice Date:<br></strong> {{ invoice.invoiceDate | date: 'mediumDate' }}</p>
+                  <!-- <p><strong>Due Date:<br></strong> {{ invoice.dueDate | date: 'mediumDate' }}</p> -->
+                </div>
+                <div class="col d-flex justify-content-center align-items-center text-center">
+                  <!-- <p><strong>Invoice Date:<br></strong> {{ invoice.invoiceDate | date: 'mediumDate' }}</p> -->
+                  <p><strong>Due Date:<br></strong> {{ invoice.dueDate | date: 'mediumDate' }}</p>
+                </div>
+                <div class="col d-flex justify-content-center align-items-center text-center">
+                  <p><strong>Total Amount:</strong> {{ invoice.totalAmount | currency:'INR':true }}</p>
+                </div>
+                <div class="col d-flex justify-content-center align-items-center">
+                  <button class="btn btn-primary" (click)="viewInvoiceDetails(invoice)">View</button>
+                </div>
+                <div class="col d-flex justify-content-center align-items-center">
+                  <!-- <button class="btn btn-primary" *ngIf="invoice.paymentStatus == 'UNPAID'"
+                    (click)="makePayment(invoice.familyAccountId,invoice.invoiceId)">Pay</button> -->
+                  <button class="btn btn-primary" *ngIf="invoice.paymentStatus == 'UNPAID'"
+                    (click)="makePayment(invoice)">Pay</button>
+                  <button class="btn btn-success" *ngIf="invoice.paymentStatus == 'PAID'">Paid</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="p-4 p-md-5" *ngIf="showInvoiceDetails">
+      <div class="row d-flex justify-content-center">
+        <div class="col">
+          <div class="card rounded-3">
+            <div class="card-body p-4">
+              <div class="row mb-4">
+                <div class="col-9" style="margin-top: auto;margin-bottom: auto;">
+                  <h3>Invoice Details</h3>
+                </div>
+                <div class="col-3 d-flex justify-content-end mt-1 mb-1">
+                  <button class="btn btn-danger" (click)="close()">x</button>
+                </div>
+              </div>
+              <div class="rounded d-flex flex-column p-2" style="background-color: #f8f9fa;">
+                <div class="p-2 me-3">
+                  <h4>Subscriptions</h4>
+                </div>
+                <div class="p-2 d-flex" *ngFor="let userSubscription of selectedInvoice?.userSubscriptions">
+                  <div class="col-8">{{ userSubscription.providerName }}</div>
+                  <div class="ms-auto">{{ userSubscription.price | currency:'INR':true }}</div>
+                </div>
+                <div class="border-top px-2 mx-2"></div>
+                <div class="p-2 d-flex pt-3">
+                  <div class="col-8"><b>Total</b></div>
+                  <div class="ms-auto"><b class="text-success">{{ selectedInvoice?.totalAmount | currency:'INR':true
+                      }}</b></div>
+                </div>
+              </div>
+              <div class="py-3">
+                <button class="btn btn-primary" *ngIf="selectedInvoice && selectedInvoice.paymentStatus == 'UNPAID'"
+                  (click)="makePayment(selectedInvoice)">Pay</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+  </mat-card>
+
+
+</div>
+
+
+<section class="p-4 p-md-5" *ngIf="showPaymentGateway">
+  <div class="row d-flex justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-5">
+      <div class="card rounded-3">
+        <div class="card-body p-4">
+          <div class="row mb-4">
+            <div class="col ">
+              <h3>Payment</h3>
+            </div>
+            <div class="col d-flex justify-content-end mt-1 mb-1">
+              <button class="btn btn-danger" (click)="close()">x</button>
+            </div>
+          </div>
+          <div class="rounded d-flex flex-column p-2" style="background-color: #f8f9fa;">
+            <div class="p-2 me-3">
+              <h4>Subscriptions</h4>
+            </div>
+            <div class="p-2 d-flex" *ngFor="let userSubscription of selectedInvoice?.userSubscriptions">
+              <div class="col-8">{{ userSubscription.providerName }}</div>
+              <div class="ms-auto">{{ userSubscription.price | currency:'INR':true }}</div>
+            </div>
+            <div class="border-top px-2 mx-2"></div>
+            <div class="p-2 d-flex pt-3">
+              <div class="col-8"><b>Total</b></div>
+              <div class="ms-auto"><b class="text-success">{{ selectedInvoice?.totalAmount | currency:'INR':true
+                  }}</b></div>
+            </div>
+          </div>
+          <form action="" class="mt-3" #paymentForm="ngForm" *ngIf="selectedInvoice"
+            (ngSubmit)="confirmPayment(selectedInvoice.familyAccountId, selectedInvoice.invoiceId)">
+
+            <p class="fw-bold mb-4">Enter Card Details -</p>
+
+            <div class="form-outline mb-4">
+              <input type="text" id="formControlLgXsd" class="form-control form-control-lg"
+              [(ngModel)]="cardholderName" name="cardholderName"  placeholder="Cardholder's Name" required />
+            </div>
+
+            <div class="row mb-4">
+              <div class="col-7">
+                <div class="form-outline">
+                  <input type="text" id="formControlLgXM" class="form-control form-control-lg" placeholder="Card Number"
+                  [(ngModel)]="cardNumber" name="cardNumber"  maxlength="19" minlength="19" required />
+                  <!-- <label class="form-label" for="formControlLgXM">Card Number</label> -->
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-outline">
+                  <input type="text" id="formControlLgExpk" class="form-control form-control-lg" placeholder="MM/YYYY"
+                  [(ngModel)]="expirationDate" name="expirationDate" maxlength="7" minlength="7" required />
+                  <label class="form-label" for="formControlLgExpk">Expire</label>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="form-outline">
+                  <input type="password" id="formControlLgcvv" class="form-control form-control-lg" placeholder="Cvv"
+                  [(ngModel)]="cvv" name="cvv"  maxlength="3" minlength="3" required />
+                  <label class="form-label" for="formControlLgcvv">Cvv</label>
+                </div>
+              </div>
+              <!-- <button type="submit" class="btn btn-success btn-lg btn-block"
+                *ngIf="selectedInvoice && selectedInvoice.paymentStatus == 'UNPAID'"
+                (click)="confirmPayment(selectedInvoice.familyAccountId,selectedInvoice.invoiceId)">Make Payment
+              </button> -->
+              <button type="submit" class="btn btn-success btn-lg btn-block"
+                [disabled]="!paymentForm.valid || !selectedInvoice || selectedInvoice.paymentStatus !== 'UNPAID'">
+                Make Payment
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="custom-dialog" *ngIf="showNotification">
+  <div style="background-color: white;">
+    <h3 mat-dialog-title>{{notificationText}}</h3>
+    <!-- <div mat-dialog-content>
+      <p>Your notification message goes here.</p>
+    </div> -->
+    <div mat-dialog-actions class="d-flex justify-content-center">
+      <button class="btn btn-primary" (click)="test()">Close</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,408 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>streamline-ott documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
+            <a href="../" class="navbar-brand">streamline-ott documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  LandingPageComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/landing-page/landing-page.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-landing-page</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./landing-page.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./landing-page.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component } from &#x27;@angular/core&#x27;;
+
+@Component({
+  selector: &#x27;app-landing-page&#x27;,
+  templateUrl: &#x27;./landing-page.component.html&#x27;,
+  styleUrls: [&#x27;./landing-page.component.css&#x27;]
+})
+export class LandingPageComponent {
+
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;!-- app.component.html --&gt;
+
+&lt;mat-toolbar class&#x3D;&quot;bg-dark&quot;&gt;
+    &lt;div class&#x3D;&quot;container menu-bar&quot;&gt;
+      &lt;mat-icon&gt;ondemand_video&lt;/mat-icon&gt;
+      &lt;span class&#x3D;&quot;title&quot;&gt;Streamline OTT&lt;/span&gt;
+    &lt;/div&gt;  
+    &lt;div class&#x3D;&quot;nav-options&quot;&gt;
+      &lt;a mat-button routerLink&#x3D;&quot;/login&quot; routerLinkActive&#x3D;&quot;active&quot;&gt;SignIn&lt;/a&gt;|
+      &lt;a mat-button routerLink&#x3D;&quot;/register&quot; routerLinkActive&#x3D;&quot;active&quot;&gt;SignUp&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/mat-toolbar&gt;
+  
+  &lt;div class&#x3D;&quot;hero&quot;&gt;
+    &lt;div class&#x3D;&quot;container&quot;&gt;
+      &lt;div class&#x3D;&quot;hero-content&quot;&gt;
+        &lt;h1&gt;Welcome to Streamline OTT Billing&lt;/h1&gt;
+        &lt;p&gt;Streamline your billing process for OTT services with ease and efficiency.&lt;/p&gt;
+        &lt;a mat-raised-button class&#x3D;&quot;bg-light&quot; routerLink&#x3D;&quot;/login&quot;&gt;Get Started&lt;/a&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;hero-image&quot;&gt;
+        &lt;!-- &lt;img src&#x3D;&quot;assets/ott-billing-image.jpg&quot; alt&#x3D;&quot;OTT Billing System&quot; /&gt; --&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  
+  &lt;div class&#x3D;&quot;features&quot;&gt;
+    &lt;h2&gt;Key Features&lt;/h2&gt;
+    &lt;div class&#x3D;&quot;container&quot;&gt; 
+      &lt;div class&#x3D;&quot;feature-card&quot;&gt;
+        &lt;mat-icon&gt;payment&lt;/mat-icon&gt;
+        &lt;h3&gt;Easy Billing&lt;/h3&gt;
+        &lt;p class&#x3D;&quot;text-center&quot;&gt;Effortlessly manage billing for your OTT services.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;feature-card&quot;&gt;
+        &lt;mat-icon&gt;security&lt;/mat-icon&gt;
+        &lt;h3&gt;One Account&lt;/h3&gt;
+        &lt;p class&#x3D;&quot;text-center&quot;&gt;All family members managed under one account.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;feature-card&quot;&gt;
+        &lt;mat-icon&gt;timeline&lt;/mat-icon&gt;
+        &lt;h3&gt;On Time Alerts&lt;/h3&gt;
+        &lt;p class&#x3D;&quot;text-center&quot;&gt;Get Notifications of Bills on Email&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  </code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./landing-page.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">
+/* Apply your theme colors */
+/* body {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url(&#x27;assets/ott-billing-background.jpg&#x27;) center/cover no-repeat;
+    color: #fff;
+    text-align: center;
+} */
+
+/* Apply typography styles */
+body {
+    font-family: &#x27;Roboto, sans-serif&#x27;;
+}
+
+/* Apply the theme to the body or a specific container */
+/* body {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url(&#x27;assets/ott-billing-background.jpg&#x27;) center/cover no-repeat;
+    color: #fff;
+    text-align: center;
+} */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.menu-bar{
+    display: flex;
+    align-items: center;
+    margin-left: 2rem;
+}
+
+.title{
+    margin-left: 0.5rem;
+}
+
+.hero {
+    padding: 100px 0;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    font-size: 36px;
+    margin: 20px 0;
+}
+
+.hero p {
+    font-size: 18px;
+    margin-bottom: 40px;
+}
+
+.features {
+    background-color: #f5f5f5;
+    padding: 50px 0;
+}
+
+.features .container {
+    display: flex; /* Use Flexbox to create a horizontal layout */
+    justify-content: space-around; /* Add space between feature cards */
+  }
+
+.features h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 36px;
+}
+
+.feature-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    max-width: 300px;
+}
+
+.feature-card mat-icon {
+    font-size: 48px;
+}
+
+.bg-dark{
+    background-color: #064065 !important;
+    color:white !important;
+}
+
+.bg-light{
+    background-color: #16a2b9 !important;
+    color:white !important;
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><!-- app.component.html --><mat-toolbar class="bg-dark">    <div class="container menu-bar">      <mat-icon>ondemand_video</mat-icon>      <span class="title">Streamline OTT</span>    </div>      <div class="nav-options">      <a mat-button routerLink="/login" routerLinkActive="active">SignIn</a>|      <a mat-button routerLink="/register" routerLinkActive="active">SignUp</a>    </div></mat-toolbar>    <div class="hero">    <div class="container">      <div class="hero-content">        <h1>Welcome to Streamline OTT Billing</h1>        <p>Streamline your billing process for OTT services with ease and efficiency.</p>        <a mat-raised-button class="bg-light" routerLink="/login">Get Started</a>      </div>      <div class="hero-image">        <!-- <img src="assets/ott-billing-image.jpg" alt="OTT Billing System" /> -->      </div>    </div>  </div>    <div class="features">    <h2>Key Features</h2>    <div class="container">       <div class="feature-card">        <mat-icon>payment</mat-icon>        <h3>Easy Billing</h3>        <p class="text-center">Effortlessly manage billing for your OTT services.</p>      </div>      <div class="feature-card">        <mat-icon>security</mat-icon>        <h3>One Account</h3>        <p class="text-center">All family members managed under one account.</p>      </div>      <div class="feature-card">        <mat-icon>timeline</mat-icon>        <h3>On Time Alerts</h3>        <p class="text-center">Get Notifications of Bills on Email</p>      </div>    </div>  </div>  </div>'
+    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'FamilyAccountPageComponent', 'selector': 'app-family-account-page'},{'name': 'HomePageComponent', 'selector': 'app-home-page'},{'name': 'InvoicePageComponent', 'selector': 'app-invoice-page'},{'name': 'LandingPageComponent', 'selector': 'app-landing-page'},{'name': 'LoginPageComponent', 'selector': 'app-login-page'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'RegistrationPageComponent', 'selector': 'app-registration-page'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'LandingPageComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'LandingPageComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,83 @@
+.body{
+    background-color: #f5f5f5 !important;
+}
+.custom-card {
+    max-width: 600px; /* Set your desired maximum width */
+    width: 100%; /* Ensure the card takes the full width of its container */
+    margin: 0 auto; /* Center the card horizontally on the page */
+    box-shadow: 0 4px 6px 2px rgba(0, 0, 0, 0.1);
+  }
+
+.card-header {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;
+    background-color: #673ab7;
+    /* Set your desired background color */
+    color: #ffffff;
+    /* Set your desired text color */
+    padding: 12px;
+    /* Add padding as needed */
+    border-radius: 4px;
+    /* Add a border radius for rounded corners */
+}
+
+.card-header {
+    background-color: #673ab7;
+    /* Set your desired background color */
+    color: #ffffff;
+    /* Set your desired text color */
+    padding: 12px;
+    /* Add padding as needed */
+    border-radius: 4px;
+    /* Add a border radius for rounded corners */
+}
+
+.card-title {
+    font-size: 16px;
+    /* Set your desired title font size */
+    font-weight: 500;
+    /* Set your desired title font weight */
+    display: flex;
+    align-content: flex-end;
+    margin-top: auto;
+    margin-bottom: auto;
+
+}
+
+.card-subtitle {
+    font-size: 14px;
+    /* Set your desired subtitle font size */
+    font-weight: 400;
+    /* Set your desired subtitle font weight */
+}
+
+.card-text{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+
+.custom-dialog {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
+    border-color: black; 
+    /* background-color: rgba(0, 0, 0, 0.6); */
+  }
+
+  .bg-dark{
+    background-color: #064065 !important;
+    color:white !important;
+}
+
+.bg-light{
+    background-color: #16a2b9 !important;
+    color:white !important;
+}

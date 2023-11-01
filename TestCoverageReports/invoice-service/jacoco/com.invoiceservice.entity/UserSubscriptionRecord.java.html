@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserSubscriptionRecord.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">invoice-service</a> &gt; <a href="index.source.html" class="el_package">com.invoiceservice.entity</a> &gt; <span class="el_source">UserSubscriptionRecord.java</span></div><h1>UserSubscriptionRecord.java</h1><pre class="source lang-java linenums">package com.invoiceservice.entity;
+
+import java.math.BigDecimal;
+
+//import jakarta.persistence.Entity;
+//import jakarta.persistence.GeneratedValue;
+//import jakarta.persistence.GenerationType;
+//import jakarta.persistence.Id;
+//import jakarta.persistence.JoinColumn;
+//import jakarta.persistence.ManyToOne;
+//import lombok.Data;
+//
+//@Data
+//@Entity
+//public class UserSubscriptionRecord {
+//	
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+//
+//    @ManyToOne
+//    @JoinColumn(name = &quot;invoice_id&quot;)
+//    private Invoice invoice;
+//
+//    private Long userId;
+//    private Long packId;
+//
+//}
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+<span class="fc" id="L42">@Setter</span>
+@Entity
+<span class="fc" id="L44">public class UserSubscriptionRecord {</span>
+	
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+
+    @ManyToOne
+    @JoinColumn(name = &quot;invoice_id&quot;)
+    private Invoice invoice;
+
+    private Long userId;
+    private Long packId;
+    private String providerName;
+    private BigDecimal price;
+
+    // Constructors, getters, and setters
+    public Long getId() {
+<span class="fc" id="L62">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L66">        this.id = id;</span>
+<span class="fc" id="L67">    }</span>
+
+    public Long getUserId() {
+<span class="fc" id="L70">        return userId;</span>
+    }
+
+    public void setUserId(Long userId) {
+<span class="fc" id="L74">        this.userId = userId;</span>
+<span class="fc" id="L75">    }</span>
+
+    public Long getPackId() {
+<span class="fc" id="L78">        return packId;</span>
+    }
+
+    public void setPackId(Long packId) {
+<span class="fc" id="L82">        this.packId = packId;</span>
+<span class="fc" id="L83">    }</span>
+
+    public String getProviderName() {
+<span class="fc" id="L86">        return providerName;</span>
+    }
+
+    public void setProviderName(String providerName) {
+<span class="fc" id="L90">        this.providerName = providerName;</span>
+<span class="fc" id="L91">    }</span>
+
+    public BigDecimal getPrice() {
+<span class="fc" id="L94">        return price;</span>
+    }
+
+    public void setPrice(BigDecimal price) {
+<span class="fc" id="L98">        this.price = price;</span>
+<span class="fc" id="L99">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

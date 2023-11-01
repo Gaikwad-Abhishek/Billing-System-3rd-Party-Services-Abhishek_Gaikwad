@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BasicConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">user-management</a> &gt; <a href="index.source.html" class="el_package">com.usermanagement.configuration</a> &gt; <span class="el_source">BasicConfiguration.java</span></div><h1>BasicConfiguration.java</h1><pre class="source lang-java linenums">package com.usermanagement.configuration;
+
+import static org.springframework.security.config.Customizer.withDefaults;
+
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
+import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
+import org.springframework.security.web.SecurityFilterChain;
+
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
+import com.usermanagement.service.CustomUserDetailsService;
+
+
+@Configuration
+//@EnableSwagger2
+<span class="fc" id="L37">public class BasicConfiguration {</span>
+
+    @Value(&quot;${jwt.public.key}&quot;)
+	RSAPublicKey key;
+
+	@Value(&quot;${jwt.private.key}&quot;)
+	RSAPrivateKey priv;
+    
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
+    
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
+<span class="fc" id="L50">        auth.userDetailsService(userDetailsService);</span>
+<span class="fc" id="L51">    }</span>
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+<span class="fc" id="L55">        return userDetailsService;</span>
+    }
+    
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+<span class="fc" id="L60">        http</span>
+<span class="fc" id="L61">            .csrf(csrf -&gt; csrf.disable())</span>
+<span class="fc" id="L62">            .authorizeHttpRequests((requests) -&gt; requests</span>
+<span class="fc" id="L63">            .requestMatchers(&quot;api/auth/register&quot;, &quot;swagger-ui.html&quot;,&quot;api/auth/new-user/**&quot;, &quot;/api/auth/token&quot;, &quot;/api/auth/social/token&quot;,&quot;/v3/api-docs&quot;,&quot;/add.html&quot;,&quot;/api/family-account/**&quot;,&quot;/swagger-ui/index.html&quot;).permitAll()</span>
+<span class="fc" id="L64">            .anyRequest().authenticated())</span>
+<span class="fc" id="L65">            .logout(withDefaults())</span>
+<span class="fc" id="L66">            .httpBasic(withDefaults())</span>
+<span class="fc" id="L67">            .oauth2ResourceServer(</span>
+<span class="fc" id="L68">                oauth2ResourceServer -&gt; oauth2ResourceServer.jwt(jwt -&gt; </span>
+<span class="fc" id="L69">                                                                    jwt.decoder(jwtDecoder())))</span>
+<span class="fc" id="L70">            .sessionManagement((session) -&gt; session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))</span>
+<span class="fc" id="L71">            .exceptionHandling((exceptions) -&gt; exceptions</span>
+<span class="fc" id="L72">            .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())</span>
+<span class="fc" id="L73">            .accessDeniedHandler(new BearerTokenAccessDeniedHandler())</span>
+    );
+        
+<span class="fc" id="L76">        return http.build();</span>
+    }
+    
+    @Bean
+	JwtEncoder jwtEncoder() {
+        
+<span class="fc" id="L82">        JWK jwk = new RSAKey.Builder(this.key).privateKey(this.priv).build();</span>
+<span class="fc" id="L83">		JWKSource&lt;SecurityContext&gt; jwks = new ImmutableJWKSet&lt;&gt;(new JWKSet(jwk));</span>
+<span class="fc" id="L84">		return new NimbusJwtEncoder(jwks);</span>
+	}
+
+    @Bean
+	JwtDecoder jwtDecoder() {
+<span class="fc" id="L89">		return NimbusJwtDecoder.withPublicKey(this.key).build();</span>
+	}
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+<span class="fc" id="L94">        return authenticationConfiguration.getAuthenticationManager();</span>
+    }
+  
+//    @Bean
+//    public Docket api() {
+//        return new Docket(DocumentationType.SWAGGER_2)
+//            .select()
+//            .apis(RequestHandlerSelectors.basePackage(&quot;com.usermanagement.controller&quot;)) 
+//            .paths(PathSelectors.any())
+//            .build();
+//    }
+    
+//    @Bean
+
+    
+//    public Docket api()
+//     
+//    {
+//            return
+//     
+//    new Docket(DocumentationType.SWAGGER_2)
+//                    .select()
+//                    .apis(RequestHandlerSelectors.any())
+//                    .paths(PathSelectors.any())
+//                    .build();
+//        }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

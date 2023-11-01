@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BillingScheduler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">billing-service</a> &gt; <a href="index.source.html" class="el_package">com.billingservice.service</a> &gt; <span class="el_source">BillingScheduler.java</span></div><h1>BillingScheduler.java</h1><pre class="source lang-java linenums">package com.billingservice.service;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.billingservice.DTO.FamilySubscriptionDTO;
+import com.billingservice.client.InvoiceServiceCommunication;
+
+@Service
+<span class="fc" id="L15">public class BillingScheduler {</span>
+
+    @Autowired
+    private InvoiceServiceCommunication invoiceServiceCommunication;
+    
+    @Autowired
+    private SubscriptionService subscriptionService;
+    
+    @Autowired
+    private BillingCycleService billingCycleService;
+
+    private LocalDateTime lastExecutionTime;    
+<span class="fc" id="L27">    private final int billingCycleDuration = 30;</span>
+
+//    @Scheduled(cron = &quot;0 0 0 * * ?&quot;) // Execute daily at midnight
+//    @Scheduled(fixedRate = 10000)
+    public void runBillingService() {
+    	
+<span class="fc" id="L33">    	lastExecutionTime = billingCycleService.getLastBillingCycle().getLastExecutionTimestamp();</span>
+    	
+        // Calculate the time since the last execution
+<span class="fc" id="L36">        Duration timeSinceLastExecution = Duration.between(lastExecutionTime, LocalDateTime.now());</span>
+        
+        // If 30 days completed, execute the billing service
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        if (timeSinceLastExecution.toDays() == billingCycleDuration) {</span>
+            // Execute the billing service
+        	
+<span class="fc" id="L42">        	List&lt;FamilySubscriptionDTO&gt; familySubscriptions = subscriptionService.getFamilySubscriptions();</span>
+<span class="fc" id="L43">        	invoiceServiceCommunication.generateInvoice(familySubscriptions);</span>
+<span class="fc" id="L44">        	invoiceServiceCommunication.generateInvoiceEmail(familySubscriptions);</span>
+            
+        	// Update the last execution time to the next day and store it in the database
+<span class="fc" id="L47">            lastExecutionTime = LocalDateTime.now().plus(1, ChronoUnit.DAYS);</span>
+<span class="fc" id="L48">            billingCycleService.createBillingCycle(lastExecutionTime);</span>
+        }
+<span class="fc" id="L50">    }</span>
+    
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

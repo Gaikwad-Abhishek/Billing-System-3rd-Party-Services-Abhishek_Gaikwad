@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FamilyAccountController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">user-management</a> &gt; <a href="index.source.html" class="el_package">com.usermanagement.controller</a> &gt; <span class="el_source">FamilyAccountController.java</span></div><h1>FamilyAccountController.java</h1><pre class="source lang-java linenums">    package com.usermanagement.controller;
+
+    import java.util.List;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.http.ResponseEntity;
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.PathVariable;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.RequestBody;
+    import org.springframework.web.bind.annotation.RequestHeader;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RestController;
+
+
+    import com.usermanagement.dto.FamilyAccountDetailsDTO;
+    import com.usermanagement.entity.FamilyAccount;
+    import com.usermanagement.service.DeactivationRequestService;
+    import com.usermanagement.service.FamilyAccountService;
+    import com.usermanagement.service.JwtService;
+    import com.usermanagement.service.OtpService;
+    //import com.usermanagement.service.MessageProducerService;
+    import com.usermanagement.service.UserService;
+    import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
+
+    //import io.swagger.annotations.ApiOperation;
+    import io.swagger.v3.oas.annotations.Operation;
+    import io.swagger.v3.oas.annotations.tags.Tag;
+
+    @RestController
+    @RequestMapping(&quot;/api/family-account&quot;)
+    @Tag(name = &quot;Family API&quot;)
+<span class="fc" id="L33">    public class FamilyAccountController {</span>
+
+        @Autowired
+        private FamilyAccountService familyAccountService; 
+
+        @Autowired
+        private UserService userService; 
+        
+        @Autowired
+        private JwtService jwtService;
+        
+        @Autowired
+        private OtpService otpService;
+        
+        @Autowired
+        private DeactivationRequestService deactivationRequestService; 
+        
+        
+        @Operation(summary = &quot;Create Family Account&quot;, description = &quot;Create a new family account&quot;)
+        @PostMapping(&quot;/create&quot;)
+        public ResponseEntity&lt;String&gt; createFamilyAccount(@RequestHeader(&quot;Authorization&quot;)String jwtToken) {
+<span class="fc" id="L54">            Long userId = jwtService.getUserId(jwtToken);</span>
+<span class="fc" id="L55">            String response = familyAccountService.createFamilyAccount(userId);</span>
+<span class="fc" id="L56">            return ResponseEntity.ok(response);</span>
+        }
+        
+        @GetMapping(&quot;/details&quot;)
+        public ResponseEntity&lt;FamilyAccountDetailsDTO&gt; getFamilyAccountDetails(@RequestHeader(&quot;Authorization&quot;)String jwtToken) {
+<span class="nc" id="L61">            Long userId = jwtService.getUserId(jwtToken);</span>
+<span class="nc" id="L62">            return ResponseEntity.ok(familyAccountService.getFamilyAccountDetails(userId));</span>
+        }
+                
+        @Operation(summary = &quot;Add Family Member to Account&quot;, description = &quot;Add a family member to an existing family account&quot;)
+        @PostMapping(&quot;/add-member/{contactNo}/validate&quot;)
+        public ResponseEntity&lt;String&gt; addFamilyMemberValidate(
+                @RequestHeader(&quot;Authorization&quot;)String jwtToken,
+                @PathVariable String contactNo
+        ) {
+<span class="nc" id="L71">            Long userId = jwtService.getUserId(jwtToken);</span>
+<span class="nc" id="L72">            return ResponseEntity.ok(otpService.generateAndSendOtp(userId,contactNo));</span>
+        }
+        
+        @Operation(summary = &quot;Add Family Member to Account&quot;, description = &quot;Add a family member to an existing family account&quot;)
+        @PostMapping(&quot;/add-member/{contactNo}/{otp}&quot;)
+        public ResponseEntity&lt;String&gt; addFamilyMember(
+                @RequestHeader(&quot;Authorization&quot;)String jwtToken,
+                @PathVariable String contactNo,
+                @PathVariable String otp
+        ) {
+<span class="nc" id="L82">            Long userId = jwtService.getUserId(jwtToken);</span>
+<span class="nc" id="L83">            String response = familyAccountService.addFamilyMember(userId,otp,contactNo);</span>
+<span class="nc" id="L84">            return ResponseEntity.ok(response);</span>
+        }
+        
+        @PostMapping(&quot;/remove-member/{userId}&quot;)
+        public ResponseEntity&lt;String&gt; addFamilyMember(
+                @PathVariable Long userId
+        ) {
+<span class="nc" id="L91">            String response = familyAccountService.removeFamilyMember(userId);</span>
+<span class="nc" id="L92">            return ResponseEntity.ok(response);</span>
+        }
+        
+        
+
+        @Operation(summary = &quot;Activate Family Account&quot;, description = &quot;Start the billing cycle for a family account&quot;)
+        @PostMapping(&quot;/activate/{accountId}&quot;)
+        public ResponseEntity&lt;String&gt; activateFamilyAccount(@PathVariable Long accountId) {
+<span class="fc" id="L100">            FamilyAccount activatedAccount = familyAccountService.activateFamilyAccount(accountId);</span>
+<span class="fc" id="L101">            return ResponseEntity.ok(&quot;Account Activated&quot;);</span>
+        }
+        
+        @PostMapping(&quot;/deactivate-request/{familyAccountId}&quot;)
+        public ResponseEntity&lt;String&gt; generateDeactivationRequest(
+                @PathVariable Long familyAccountId
+        ) {
+<span class="fc" id="L108">            String response = deactivationRequestService.createDeactivationRequest(familyAccountId);</span>
+<span class="fc" id="L109">            return ResponseEntity.ok(response);</span>
+        }
+        
+        @PostMapping(&quot;/deactivate-accounts&quot;)
+        public ResponseEntity&lt;String&gt; deactivateAccounts() {
+<span class="fc" id="L114">            String response = deactivationRequestService.deactivateAccounts();</span>
+<span class="fc" id="L115">            return ResponseEntity.ok(response);</span>
+        }
+        
+        @PostMapping(&quot;/suspend&quot;)
+        public ResponseEntity&lt;String&gt; suspendFamilyAccount(@RequestBody List&lt;Long&gt; accountId) {
+<span class="fc" id="L120">            System.out.println(accountId);</span>
+<span class="fc" id="L121">            familyAccountService.suspendFamilyAccount(accountId);</span>
+<span class="fc" id="L122">            return ResponseEntity.ok(&quot;Accounts Suspended&quot;);</span>
+        }
+        
+        @PostMapping(&quot;/terminate&quot;)
+        public ResponseEntity&lt;String&gt; terminateFamilyAccount(@RequestBody List&lt;Long&gt; accountId) {
+<span class="fc" id="L127">            familyAccountService.terminateFamilyAccount(accountId);</span>
+<span class="fc" id="L128">            return ResponseEntity.ok(&quot;Accounts Terminated&quot;);</span>
+        }
+        
+        @PostMapping(&quot;/primary-user-mail&quot;)
+        public ResponseEntity&lt;String&gt; getPrimaryUserMail(@RequestBody Long familyAccountId) {
+<span class="fc" id="L133">            return ResponseEntity.ok(familyAccountService.getPrimaryUserMail(familyAccountId));</span>
+        }
+        
+        @GetMapping(&quot;/active-accounts&quot;)
+        public ResponseEntity&lt;List&lt;Long&gt;&gt; getActiveAccounts() {
+<span class="fc" id="L138">            return ResponseEntity.ok(familyAccountService.getActiveFamilyAccountIds());</span>
+        }
+            
+    }
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

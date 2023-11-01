@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FamilyAccountDetailsDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">user-management</a> &gt; <a href="index.source.html" class="el_package">com.usermanagement.dto</a> &gt; <span class="el_source">FamilyAccountDetailsDTO.java</span></div><h1>FamilyAccountDetailsDTO.java</h1><pre class="source lang-java linenums">package com.usermanagement.dto;
+
+import java.util.List;
+
+import com.usermanagement.entity.User;
+import com.usermanagement.enums.FamilyAccountStatus;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+
+<span class="fc" id="L14">@NoArgsConstructor</span>
+<span class="nc" id="L15">@AllArgsConstructor</span>
+public class FamilyAccountDetailsDTO {
+	
+    private Long familyAccountId;
+    private FamilyAccountStatus accountStatus;
+    private boolean deactivationRequestStatus;
+    private UserDTO primaryUser;
+    private List&lt;UserSubscriptionDetailsDTO&gt; secondaryUsers;
+    
+    public Long getFamilyAccountId() {
+<span class="fc" id="L25">        return familyAccountId;</span>
+    }
+
+    public void setFamilyAccountId(Long familyAccountId) {
+<span class="fc" id="L29">        this.familyAccountId = familyAccountId;</span>
+<span class="fc" id="L30">    }</span>
+
+    public FamilyAccountStatus getAccountStatus() {
+<span class="fc" id="L33">        return accountStatus;</span>
+    }
+
+    public void setAccountStatus(FamilyAccountStatus accountStatus) {
+<span class="fc" id="L37">        this.accountStatus = accountStatus;</span>
+<span class="fc" id="L38">    }</span>
+
+    public boolean isDeactivationRequestStatus() {
+<span class="fc" id="L41">        return deactivationRequestStatus;</span>
+    }
+
+    public void setDeactivationRequestStatus(boolean deactivationRequestStatus) {
+<span class="fc" id="L45">        this.deactivationRequestStatus = deactivationRequestStatus;</span>
+<span class="fc" id="L46">    }</span>
+
+    public UserDTO getPrimaryUser() {
+<span class="fc" id="L49">        return primaryUser;</span>
+    }
+
+    public void setPrimaryUser(UserDTO primaryUser) {
+<span class="fc" id="L53">        this.primaryUser = primaryUser;</span>
+<span class="fc" id="L54">    }</span>
+
+    public List&lt;UserSubscriptionDetailsDTO&gt; getSecondaryUsers() {
+<span class="fc" id="L57">        return secondaryUsers;</span>
+    }
+
+    public void setSecondaryUsers(List&lt;UserSubscriptionDetailsDTO&gt; secondaryUsers) {
+<span class="fc" id="L61">        this.secondaryUsers = secondaryUsers;</span>
+<span class="fc" id="L62">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
